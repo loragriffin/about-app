@@ -26,7 +26,7 @@ class MainHandler(TemplateHandler):
         self.set_header(
             'Cache-Control',
             'no-store, no-cache, must-revalidate, max-age=0')
-        self.render_template("base.html", {})
+        self.render_template("home.html", {})
 
 
 class PageHandler(TemplateHandler):
