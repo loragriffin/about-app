@@ -1,17 +1,31 @@
 import os
 
+import boto3
+
 import tornado.ioloop
 import tornado.web
 import tornado.log
 
+from dotenv import load_dotenv
+
 from jinja2 import \
     Environment, PackageLoader, select_autoescape
+
+load_dotenv('.env')
 
 PORT = int(os.environ.get('PORT', '8888'))
 
 ENV = Environment(
     loader=PackageLoader('myapp', 'templates'),
     autoescape=select_autoescape(['html', 'xml'])
+)
+
+
+SES_client = boto3.client(
+    'ses',
+    aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
+    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
+    region_name="us-east-1"
 )
 
 
@@ -30,6 +44,26 @@ class MainHandler(TemplateHandler):
 
 
 class PageHandler(TemplateHandler):
+    def post(self, page):
+        email = self.get_body_argument('email')
+
+        response = SES_client.send_email(
+            Destination={
+                'ToAddresses': ['lora.jean@me.com'],
+            },
+            Message={
+                'Body': {
+                    'Text': {
+                        'Charset': 'UTF-8',
+                        'Data': 'Email: {}'.format(email),
+                    },
+                },
+                'Subject': {'Charset': 'UTF-8', 'Data': 'subject text here'},
+            },
+            Source='lora.jean@me.com'
+        )
+        self.redirect('/page/contact-submitted.html')
+
     def get(self, page):
         self.set_header(
             'Cache-Control',
