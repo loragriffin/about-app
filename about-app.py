@@ -45,7 +45,10 @@ class MainHandler(TemplateHandler):
 
 class PageHandler(TemplateHandler):
     def post(self, page):
-        email = self.get_body_argument('email')
+        first_name = self.get_body_argument('first_name')
+        last_name = self.get_body_argument('last_name')
+        subject = self.get_body_argument('subject')
+        message = self.get_body_argument('message')
 
         response = SES_client.send_email(
             Destination={
@@ -55,10 +58,10 @@ class PageHandler(TemplateHandler):
                 'Body': {
                     'Text': {
                         'Charset': 'UTF-8',
-                        'Data': 'Email: {}'.format(email),
+                        'Data': 'Name: {} {}\nSubject: {}\nMessage: {}'.format(first_name, last_name, subject, message),
                     },
                 },
-                'Subject': {'Charset': 'UTF-8', 'Data': 'subject text here'},
+                'Subject': {'Charset': 'UTF-8', 'Data': '{}'.format(subject)},
             },
             Source='lora.jean@me.com'
         )
