@@ -65,7 +65,7 @@ class PageHandler(TemplateHandler):
             },
             Source='lora.jean@me.com'
         )
-        self.redirect('/page/contact-submitted.html')
+        self.redirect("/page/contact-submitted.html")
 
     def get(self, page):
         self.set_header(
