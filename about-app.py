@@ -52,7 +52,7 @@ class PageHandler(TemplateHandler):
 
         response = SES_client.send_email(
             Destination={
-                'ToAddresses': ['lora.jean@me.com'],
+                'ToAddresses': ['loragriffin0@gmail.com'],
             },
             Message={
                 'Body': {
@@ -63,7 +63,7 @@ class PageHandler(TemplateHandler):
                 },
                 'Subject': {'Charset': 'UTF-8', 'Data': '{}'.format(subject)},
             },
-            Source='lora.jean@me.com'
+            Source='loragriffin0@gmail.com'
         )
         self.redirect("/page/contact-submitted.html")
 
