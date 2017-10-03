@@ -43,6 +43,13 @@ class MainHandler(TemplateHandler):
         self.render_template("home.html", {})
 
 
+class SubmittedHandler(TemplateHandler):
+    def post(self):
+        first_name = self.get_body_argument('first_name')
+
+        self.render_template("contact-submitted.html", {'first_name': first_name})
+
+
 class PageHandler(TemplateHandler):
     def post(self, page):
         first_name = self.get_body_argument('first_name')
@@ -52,7 +59,7 @@ class PageHandler(TemplateHandler):
 
         response = SES_client.send_email(
             Destination={
-                'ToAddresses': ['loragriffin0@gmail.com'],
+                'ToAddresses': ['lora.jean@me.com'],
             },
             Message={
                 'Body': {
@@ -63,7 +70,7 @@ class PageHandler(TemplateHandler):
                 },
                 'Subject': {'Charset': 'UTF-8', 'Data': '{}'.format(subject)},
             },
-            Source='loragriffin0@gmail.com'
+            Source='lora.jean@me.com'
         )
         self.redirect("/page/contact-submitted.html")
 
@@ -78,6 +85,7 @@ class PageHandler(TemplateHandler):
 def make_app():
     return tornado.web.Application([
         (r"/", MainHandler),
+        (r"/submitted", SubmittedHandler),
         (r"/page/(.*)", PageHandler),
         (r"/static/(.*)",
          tornado.web.StaticFileHandler,
